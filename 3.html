@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <select id="year-select">
+    </select>
+
+    <select id="month-select">
+    </select>
+
+    <select id="day-select">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        ……
+        <option value="31">31</option>
+    </select>
+
+    <select id="hour-select">
+    </select>
+
+    <select id="minite-select">
+    </select>
+
+    <select id="second-select">
+    </select>
+
+    <p id="result-wrapper">现在距离 2001年1月1日星期X HH:MM:SS 还有 X 天 X 小时 X 分 X 秒</p>
+</body>
+<script src="./plugs.js"></script>
+<script>
+    // 第一部分
+    // 现获取所有下拉列id同时设置一个闰年year1, 一个平年year2 
+    // 设置下拉列表的年月日时分秒
+    let year = document.getElementById('year-select')   //获取年元素
+    let month = document.getElementById('month-select')  //获取月元素
+    let day = document.getElementById('day-select')  //获取天元素
+    let hour = document.getElementById('hour-select')  //获取小时元素
+    let minite = document.getElementById('minite-select')  //获取分元素
+    let second = document.getElementById('second-select')  //获秒元素
+    let result = document.getElementById('result-wrapper') //获取输出p元素
+    let year1 = ['31', '28', '31', '30', '31', '30', '31', '31', '30', '31', '30', '31']  //平年 月份
+    let year2 = ['31', '29', '31', '30', '31', '30', '31', '31', '30', '31', '30', '31']   //润年月份
+    let flag = year2  //选择润年
+    function clooseYear() {
+        for (let i = 2000; i < 2030; i++) {
+            let opt = document.createElement('option')
+            opt.value = i
+            opt.innerHTML = i
+            year.appendChild(opt)
+        }
+    }
+    function clooseMouth() {//设置月
+        month.options.length = 0 // 清空月
+        for (let i = 0; i < 12; i++) {//for循环设置月
+            let opt = document.createElement('option')
+            opt.value = flag[i]
+            opt.innerHTML = i + 1
+            month.appendChild(opt)
+        }
+    }
+    function clooseDay() {//设置天
+        day.options.length = 0
+        let dayNum = month.options[month.selectedIndex].value
+        dayNum = parseFloat(dayNum)
+        for (let i = 1; i <= dayNum; i++) {
+            if ( i < 10 ) {
+                i = '0' + i
+            }
+            let opt = document.createElement('option')
+            opt.value = i
+            opt.innerHTML = i
+            day.appendChild(opt)
+        }
+    }
+    function clooseHour() {// 设置小时
+        for(let i = 0; i < 24; i++) {
+            if ( i < 10 ) {
+                i = '0' + i
+            }
+            let opt = document.createElement('option')
+            opt.value = i
+            opt.innerHTML = i
+            hour.appendChild(opt)
+        }
+    }
+    function clooseMini() {// 设置分
+        for(let i = 0; i < 60; i++) {
+            if ( i < 10 ) {
+                i = '0' + i
+            }
+            let opt = document.createElement('option')
+            opt.value = i
+            opt.innerHTML = i
+            let newOpt = opt.cloneNode(true)
+            minite.appendChild(opt)
+            second.appendChild(newOpt)
+        }
+    }
+    clooseYear()
+    clooseMouth()
+    clooseDay()
+    clooseMini()
+    clooseHour()
+    year.addEventListener('change', function() { // 年选择下拉列表事件
+        let yearIndex = parseFloat(year.selectedIndex) // 获取下拉列表选择的年
+        if(leapYear(yearIndex)) {
+            flag = year2 // 闰年选择year2
+        } else {
+            flag = year1
+        }
+        clooseMouth()
+        clooseDay()
+    })
+    month.addEventListener('change', function() {
+        clooseDay()
+    })
+    function leapYear(num) {
+        return !(num % (num % 100 ? 4 : 400))
+    }
+        isNow()
+</script>
+
+</html>
